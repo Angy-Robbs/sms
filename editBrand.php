@@ -12,7 +12,7 @@ if(isset($_POST['editBrandBtn'])){
     $sql = "UPDATE brands SET brand_name='$brand_name', brand_status='$brand_status' WHERE brand_id='$id'";
     if (mysqli_query($conn, $sql)) {
         // Redirect to the same page or a success page
-        header("Location: editBrand.php?brand_id=$id&success=1");
+        header("Location: editBrand.php?brand_id=some_id&success=1");
         exit();
     } else {
         echo "Error updating record: " . mysqli_error($conn);
