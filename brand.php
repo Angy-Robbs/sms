@@ -145,7 +145,7 @@ include 'connection.php';
                         <label for="editBrandName" class="col-sm-3 control-label">Brand Name: </label>
                         <label class="col-sm-1 control-label"></label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="editBrandName" name="editBrandName" placeholder="Brand Name" autocomplete="off">
+                            <input type="text" class="form-control" id="editBrandName" value="<?php echo $row["brand_name"]?>" name="editBrandName" placeholder="Brand Name" autocomplete="off">
                         </div>
                     </div>
                     <div class="form-group">
@@ -154,9 +154,9 @@ include 'connection.php';
                         <div class="col-sm-8">
                             <select class="form-control" id="editBrandStatus" name="editBrandStatus">
                                 <option value="">~~SELECT~~</option>
-                                <option value="1">Available</option>
-                                <option value="0">Not Available</option>
-                            </select>
+                                <option value="1" <?php echo ($row['brand_status'] == 1) ? 'selected' : ''; ?>>Available</option>
+                                <option value="0" <?php echo ($row['brand_status'] == 0) ? 'selected' : ''; ?>>Not Available</option>
+                       </select>
                         </div>
                     </div>
                     <input type="hidden" name="editBrandId" id="editBrandId">
