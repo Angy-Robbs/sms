@@ -1,60 +1,41 @@
 <?php
-session_start();
-include 'connection.php';
+include "connection.php";
 
-// Check if the database connection is successful
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+$id = "";
+$brand_name = "";
+$brand_status = "";
+$error = "";
+$success = "";
 
-// Update brand in the database
-if(isset($_POST['editBrandBtn'])){
-    // Validate and sanitize inputs
-    $brand_name = mysqli_real_escape_string($conn, $_POST['edit_brand_name']);
-    $brand_status = mysqli_real_escape_string($conn, $_POST['edit_brand_status']);
-    $id = intval($_POST['brand_id']); // Ensure the ID is an integer
+if ($_SERVER["REQUEST_METHOD"] == 'POST') {
+    if (!isset($_POST['brand_id'])) {
+        $error = "Invalid Request";
+        header("Location: brand.php?error=" . urlencode($error));
+        exit;
+    }
 
-    // Perform the update using a prepared statement
-    $stmt = $conn->prepare("UPDATE brands SET brand_name=?, brand_status=? WHERE brand_id=?");
-    $stmt->bind_param("sii", $brand_name, $brand_status, $id);
+    $id = $_POST['brand_id'];
+    $brand_name = $_POST["edit_brand_name"];
+    $brand_status = $_POST["edit_brand_status"];
+
+    $sql = "UPDATE brands SET brand_name=?, brand_status=? WHERE brand_id=?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        die("Preparation failed: " . $conn->error);
+    }
+
+    $stmt->bind_param("ssi", $brand_name, $brand_status, $id);
 
     if ($stmt->execute()) {
-        // Redirect to the same page or a success page
-        header("Location: editBrand.php?brand_id=$id&success=1");
-        exit();
+        $success = "Brand updated successfully!";
+        header("Location: editBrand.php?brand_id=$id&success=" . urlencode($success));
     } else {
-        echo "Error updating record: " . $stmt->error;
+        $error = "Error updating brand: " . $stmt->error;
+        header("Location: editBrand.php?brand_id=$id&error=" . urlencode($error));
     }
 
-    $stmt->close(); // Close the prepared statement
+    $stmt->close();
 }
 
-// Display brand details based on the selected brand_id
-if (isset($_GET['brand_id']) && !empty($_GET['brand_id'])) {
-    $brand_id = intval($_GET['brand_id']); // Ensure the ID is an integer
-    $stmt = $conn->prepare("SELECT * FROM brands WHERE brand_id=?");
-    $stmt->bind_param("i", $brand_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result && $result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        response($row['brand_id'], $row['brand_name'], $row['brand_status']);
-    } else {
-        response(NULL, NULL, NULL, "No Record Found");
-    }
-
-    $stmt->close(); // Close the prepared statement
-}
-
-// Function to send a JSON response
-function response($brand_id, $brand_name, $brand_status, $message = '') {
-    $response = [
-        'brand_id' => $brand_id,
-        'brand_name' => $brand_name,
-        'brand_status' => $brand_status,
-        'message' => $message
-    ];
-    echo json_encode($response);
-}
+$conn->close();
 ?>
