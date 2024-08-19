@@ -131,10 +131,10 @@ include 'connection.php';
 </div>
 
 <!-- Edit Brand Modal -->
-<div class="modal fade" id="editBrandModel" tabindex="-1" role="dialog">
+ <div class="modal fade" id="editBrandModel" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form class="form-horizontal" id="editBrandForm" action="editBrand.php" method="POST">
+            <form class="form-horizontal" id="editBrandForm" action="editBrand.php" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Brand</h4>
@@ -162,8 +162,8 @@ include 'connection.php';
                     <input type="hidden" name="editBrandId" id="editBrandId">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" id="editBrandBtn" data-loading-text="Loading..." autocomplete="off">Save Changes</button>
+                    <a class="btn btn-info" type="submit" name="cancel" href="brand.php"> Cancel </a><br>
                 </div>
             </form>
         </div>
@@ -194,6 +194,7 @@ include 'connection.php';
                     </button>
                 </form>
             </div>
+
         </div>
     </div>
 </div>
